@@ -30,6 +30,7 @@ arkime:
         - docker push ${CI_REGISTRY_IMAGE}/arkime:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
         - docker push ${CI_REGISTRY_IMAGE}/arkime:${CI_COMMIT_BRANCH}
         - docker push ${CI_REGISTRY_IMAGE}/arkime:${CI_COMMIT_SHORT_SHA}
+        - docker push ${CI_REGISTRY_IMAGE}/arkime:$(cat ${CI_PROJECT_DIR}/arkime/version)"
 
 
 fluentd:
@@ -57,3 +58,4 @@ fluentd:
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:${CI_COMMIT_BRANCH}
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:${CI_COMMIT_SHORT_SHA}
+        - docker push ${CI_REGISTRY_IMAGE}/fluentd:$(cat ${CI_PROJECT_DIR}/fluentd/version)
