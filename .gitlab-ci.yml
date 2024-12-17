@@ -59,3 +59,30 @@ fluentd:
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:${CI_COMMIT_BRANCH}
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:${CI_COMMIT_SHORT_SHA}
         - docker push ${CI_REGISTRY_IMAGE}/fluentd:$(cat ${CI_PROJECT_DIR}/fluentd/version)
+
+opensearch-dashboards:
+    stage: docker
+    image: docker:24.0.5
+    variables:
+        DOCKER_HOST: tcp://docker:2376
+        DOCKER_TLS_CERTDIR: '/certs'
+        DOCKER_TLS_VERIFY: 1
+        DOCKER_CERT_PATH: '$DOCKER_TLS_CERTDIR/client'
+    services:
+        - docker:24.0.5-dind
+    before_script:
+        - until docker info; do sleep 1; done
+    script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+        -  docker build
+          "${CI_PROJECT_DIR}/opensearch-dashboards"
+          -f "${CI_PROJECT_DIR}/opensearch-dashboards/Dockerfile"
+          --build-arg opensearch-dashboards_VERSION=$(cat ${CI_PROJECT_DIR}/opensearch-dashboards/version)
+          -t "${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"
+          -t "${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_BRANCH}"
+          -t "${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_SHORT_SHA}"
+          -t "${CI_REGISTRY_IMAGE}/opensearch-dashboards:$(cat ${CI_PROJECT_DIR}/opensearch-dashboards/version)"
+        - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}
+        - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_BRANCH}
+        - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_SHORT_SHA}
+        - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:$(cat ${CI_PROJECT_DIR}/opensearch-dashboards/version)
