@@ -1,4 +1,4 @@
-FROM debian:bookworm as installer
+FROM debian:bookworm AS installer
 
 ARG ARKIME_VERSION=5.5.1
 ARG UBUNTU_VERSION=12
@@ -26,7 +26,7 @@ RUN $ARKIMEDIR/bin/arkime_update_geo.sh
 
 # add config
 
-FROM debian:bookworm as runner
+FROM debian:bookworm AS runner
 
 # Declare args
 
