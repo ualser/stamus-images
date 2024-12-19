@@ -1,0 +1,121 @@
+#
+name: Create and publish Docker images
+
+on:
+    push:
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+    build-and-push-arkime:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            packages: write
+            attestations: write
+            id-token: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: get tag version
+              id: get_tag_version
+              run: |
+                  cat version.txt
+                  echo "version=$(cat arkime/version)" >> $GITHUB_OUTPUT
+
+            - name: Build and push Docker image
+              id: push
+              uses: docker/build-push-action@v5
+              with:
+                  context: arkime
+                  file: arkime/Dockerfile
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  build-args: 'ARKIME_VERSION=${{ steps.get_tag_version.outputs.version }}'
+
+    build-and-push-fluentd:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            packages: write
+            attestations: write
+            id-token: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: get tag version
+              id: get_tag_version
+              run: |
+                  cat version.txt
+                  echo "version=$(cat fluentd/version)" >> $GITHUB_OUTPUT
+
+            - name: Build and push Docker image
+              id: push
+              uses: docker/build-push-action@v5
+              with:
+                  context: fluentd
+                  file: fluentd/Dockerfile
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  build-args: 'FLUENTD_VERSION=${{ steps.get_tag_version.outputs.version }}'
+
+    build-and-push-opensearch_dashboards:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            packages: write
+            attestations: write
+            id-token: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Log in to the Container registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: get tag version
+              id: get_tag_version
+              run: |
+                  cat version.txt
+                  echo "version=$(cat opensearch_dashboards/version)" >> $GITHUB_OUTPUT
+
+            - name: Build and push Docker image
+              id: push
+              uses: docker/build-push-action@v5
+              with:
+                  context: opensearch_dashboards
+                  file: opensearch_dashboards/Dockerfile
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  build-args: 'OPENSEARCH_DASHBOARDS_VERSION=${{ steps.get_tag_version.outputs.version }}'
