@@ -32,7 +32,7 @@ jobs:
             - name: get tag version
               id: get_tag_version
               run: |
-                  cat version.txt
+                  cat arkime/version
                   echo "version=$(cat arkime/version)" >> $GITHUB_OUTPUT
 
             - name: Build and push Docker image
@@ -69,7 +69,7 @@ jobs:
             - name: get tag version
               id: get_tag_version
               run: |
-                  cat version.txt
+                  cat fluentd/version
                   echo "version=$(cat fluentd/version)" >> $GITHUB_OUTPUT
 
             - name: Build and push Docker image
@@ -106,7 +106,7 @@ jobs:
             - name: get tag version
               id: get_tag_version
               run: |
-                  cat version.txt
+                  cat opensearch_dashboards/version
                   echo "version=$(cat opensearch_dashboards/version)" >> $GITHUB_OUTPUT
 
             - name: Build and push Docker image
