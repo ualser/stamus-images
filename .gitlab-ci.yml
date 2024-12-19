@@ -1,5 +1,6 @@
 stages:
     - docker
+    - release
 
 default:
     tags:
@@ -19,7 +20,7 @@ arkime:
         - until docker info; do sleep 1; done
     script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        -  docker build
+        - docker build
           "${CI_PROJECT_DIR}/arkime"
           -f "${CI_PROJECT_DIR}/arkime/Dockerfile"
           --build-arg arkime_VERSION=$(cat ${CI_PROJECT_DIR}/arkime/version)
@@ -31,7 +32,6 @@ arkime:
         - docker push ${CI_REGISTRY_IMAGE}/arkime:${CI_COMMIT_BRANCH}
         - docker push ${CI_REGISTRY_IMAGE}/arkime:${CI_COMMIT_SHORT_SHA}
         - docker push ${CI_REGISTRY_IMAGE}/arkime:$(cat ${CI_PROJECT_DIR}/arkime/version)
-
 
 fluentd:
     stage: docker
@@ -47,7 +47,7 @@ fluentd:
         - until docker info; do sleep 1; done
     script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        -  docker build
+        - docker build
           "${CI_PROJECT_DIR}/fluentd"
           -f "${CI_PROJECT_DIR}/fluentd/Dockerfile"
           --build-arg FLUENTD_VERSION=$(cat ${CI_PROJECT_DIR}/fluentd/version)
@@ -74,7 +74,7 @@ opensearch-dashboards:
         - until docker info; do sleep 1; done
     script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-        -  docker build
+        - docker build
           "${CI_PROJECT_DIR}/opensearch-dashboards"
           -f "${CI_PROJECT_DIR}/opensearch-dashboards/Dockerfile"
           --build-arg opensearch-dashboards_VERSION=$(cat ${CI_PROJECT_DIR}/opensearch-dashboards/version)
@@ -86,3 +86,15 @@ opensearch-dashboards:
         - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_BRANCH}
         - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:${CI_COMMIT_SHORT_SHA}
         - docker push ${CI_REGISTRY_IMAGE}/opensearch-dashboards:$(cat ${CI_PROJECT_DIR}/opensearch-dashboards/version)
+
+release-to-github:
+    stage: release
+    image: bitnami/git
+    rules:
+        - if: '$CI_COMMIT_REF_NAME == "main"'
+          when: on_success
+    script:
+        - git config --global user.email $GITLAB_USER_EMAIL
+        - git config --global user.name $GITLAB_USER_NAME
+        - git remote add github "https://$GITHUB_USERNAME:$GITHUB_PAT@github.com/StamusNetworks/stamus-images.git"
+        - git push github HEAD:next
