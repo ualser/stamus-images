@@ -35,6 +35,19 @@ jobs:
                   cat arkime/version
                   echo "version=$(cat arkime/version)" >> $GITHUB_OUTPUT
 
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/tests
+                  tags: |
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=sha
+                      type=raw,value=latest,enable={{is_default_branch}}
+
             - name: Build and push Docker image
               id: push
               uses: docker/build-push-action@v5
@@ -42,7 +55,7 @@ jobs:
                   context: arkime
                   file: arkime/Dockerfile
                   push: true
-                  tags: ${{ steps.get_tag_version.outputs.version }}
+                  tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'ARKIME_VERSION=${{ steps.get_tag_version.outputs.version }}'
 
@@ -72,6 +85,19 @@ jobs:
                   cat fluentd/version
                   echo "version=$(cat fluentd/version)" >> $GITHUB_OUTPUT
 
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/tests
+                  tags: |
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=sha
+                      type=raw,value=latest,enable={{is_default_branch}}
+
             - name: Build and push Docker image
               id: push
               uses: docker/build-push-action@v5
@@ -79,7 +105,7 @@ jobs:
                   context: fluentd
                   file: fluentd/Dockerfile
                   push: true
-                  tags: ${{ steps.get_tag_version.outputs.version }}
+                  tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'FLUENTD_VERSION=${{ steps.get_tag_version.outputs.version }}'
 
@@ -109,6 +135,19 @@ jobs:
                   cat opensearch_dashboards/version
                   echo "version=$(cat opensearch_dashboards/version)" >> $GITHUB_OUTPUT
 
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/tests
+                  tags: |
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=sha
+                      type=raw,value=latest,enable={{is_default_branch}}
+
             - name: Build and push Docker image
               id: push
               uses: docker/build-push-action@v5
@@ -116,6 +155,6 @@ jobs:
                   context: opensearch_dashboards
                   file: opensearch_dashboards/Dockerfile
                   push: true
-                  tags: ${{ steps.get_tag_version.outputs.version }}
+                  tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'OPENSEARCH_DASHBOARDS_VERSION=${{ steps.get_tag_version.outputs.version }}'
