@@ -43,9 +43,9 @@ jobs:
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
-                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
                       type=sha
                       type=raw,value=latest,enable={{is_default_branch}}
 
@@ -94,9 +94,9 @@ jobs:
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
-                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
                       type=sha
                       type=raw,value=latest,enable={{is_default_branch}}
 
@@ -145,9 +145,9 @@ jobs:
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
-                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }}
-                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }}
+                      type=semver,pattern={{version}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
+                      type=semver,pattern={{major}},value=${{ steps.get_tag_version.outputs.version }},enable={{is_default_branch}}
                       type=sha
                       type=raw,value=latest,enable={{is_default_branch}}
 
