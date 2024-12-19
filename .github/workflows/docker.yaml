@@ -89,7 +89,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/tests
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fluentd
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -132,14 +132,14 @@ jobs:
             - name: get tag version
               id: get_tag_version
               run: |
-                  cat opensearch_dashboards/version
-                  echo "version=$(cat opensearch_dashboards/version)" >> $GITHUB_OUTPUT
+                  cat opensearch-dashboards/version
+                  echo "version=$(cat opensearch-dashboards/version)" >> $GITHUB_OUTPUT
 
             - name: Extract metadata (tags, labels) for Docker
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/tests
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/opensearch-dashboards
                   tags: |
                       type=ref,event=branch
                       type=ref,event=pr
@@ -152,8 +152,8 @@ jobs:
               id: push
               uses: docker/build-push-action@v5
               with:
-                  context: opensearch_dashboards
-                  file: opensearch_dashboards/Dockerfile
+                  context: opensearch-dashboards
+                  file: opensearch-dashboards/Dockerfile
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
