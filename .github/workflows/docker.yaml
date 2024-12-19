@@ -42,7 +42,7 @@ jobs:
                   context: arkime
                   file: arkime/Dockerfile
                   push: true
-                  tags: ${{ steps.meta.outputs.tags }}
+                  tags: ${{ steps.get_tag_version.outputs.version }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'ARKIME_VERSION=${{ steps.get_tag_version.outputs.version }}'
 
@@ -79,7 +79,7 @@ jobs:
                   context: fluentd
                   file: fluentd/Dockerfile
                   push: true
-                  tags: ${{ steps.meta.outputs.tags }}
+                  tags: ${{ steps.get_tag_version.outputs.version }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'FLUENTD_VERSION=${{ steps.get_tag_version.outputs.version }}'
 
@@ -116,6 +116,6 @@ jobs:
                   context: opensearch_dashboards
                   file: opensearch_dashboards/Dockerfile
                   push: true
-                  tags: ${{ steps.meta.outputs.tags }}
+                  tags: ${{ steps.get_tag_version.outputs.version }}
                   labels: ${{ steps.meta.outputs.labels }}
                   build-args: 'OPENSEARCH_DASHBOARDS_VERSION=${{ steps.get_tag_version.outputs.version }}'
